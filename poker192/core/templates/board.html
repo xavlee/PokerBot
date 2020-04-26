@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <title>Poker 192</title>
+  </head>
+  <body>
+
+    <div class="container" style="text-align:center">
+        <h1>Poker Game &emsp;</h1>
+        <h2>Player : </h2>
+        <br />
+        <div class='container' style="border: 5px solid lightskyblue;">
+            <br>
+            <div class='row'>
+
+                <div class='col' style='text-align:center'>
+                </div>
+
+                <div class='col' style='text-align:center'>
+                    <h2> bot's hand &emsp;</h2>
+                    <h3>
+                        {% for card in botHand %}
+                            {{card}} &emsp;
+                        {% endfor %}
+                    </h3>
+                </div>
+                
+            </div>
+            
+            <br />
+            <br />
+            <br />
+            <br />
+            <div class='container', style="text-align:center">
+                <h2> the board &emsp; </h2>
+                <h3>pot: {{pot}} &emsp;</h3>
+                <h3>
+                    <table style="float:right;width:100%;margin: 20px 40px;">
+                        <tr>
+                            {% for card in board %}
+                                <th>{{card}}</th>
+                            {% endfor %}
+                        </tr>
+                    </table>
+                </h3>
+                
+    
+            </div>
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <div class='row'>
+                <div class='col' style="text-align:center">
+                    <h2>your hand &emsp;</h2>
+                    <h3>
+                        {% for card in hand %}
+                            {{card}} &emsp;
+                        {% endfor %}
+                    </h3>
+                    
+                </div>
+
+                <div class='col' style="color:dodgerblue;">
+                    <h4><a href='/check'>Check</a>
+                    &emsp;
+                    <a href='/fold'>Fold</a></h4>
+                    <h4 style="color:dodgerblue;">
+                        Bet</h4>
+                        <form method="POST" action="/bet">
+                            {% csrf_token %}
+                            <input name="amt" placeholder="bet amount" />
+                            <input type="submit" />
+                        </form>
+                    
+                    
+                </div>
+            </div>
+            <br>
+
+        </div>
+
+        <br />
+        <hr>
+
+        <a href='/'>return home</a>
+    </div>
+    
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  </body>
+</html>
+
+
