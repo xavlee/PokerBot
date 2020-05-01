@@ -6,19 +6,36 @@ import numpy as np
 import tensorflow as tf
 import keras 
 
+# string
+# list for hand
+# list for board
+
 def predict(street, board, heroCards):
     #get all of the cards
-    hero1, hero2 = heroCards
-    hero1v, hero1s = getTuple(hero1) 
-    hero2v, hero2s = getTuple(hero2)
+    hero1 = heroCards[0] 
+    hero1s = hero1.suit
+    hero1v = hero1.value
+    hero2 = heroCards[1] 
+    hero2s = hero2.suit
+    hero2v = hero2.value
     if len(board) >= 3: 
-        board1v, board1s = getTuple(board[0])
-        board2v, board2s = getTuple(board[1])
-        board3v, board3s = getTuple(board[2])
+        board1 = board[0] 
+        board1s = board1.suit
+        board1v = board1.value
+        board2 = board[1] 
+        board2s = board2.suit
+        board2v = board2.value
+        board3 = board[2] 
+        board3s = board3.suit
+        board3v = board3.value
     if len(board) >= 4: 
-        board4v, board4s = getTuple(board[3])
+        board4 = board[3] 
+        board4s = board4.suit
+        board4v = board4.value
     if len(board) >= 5: 
-        board5v, board5s = getTuple(board[4])
+        board5 = board[4] 
+        board5s = board5.suit
+        board5v = board5.value
 
     element = None
     #make the element to predict
