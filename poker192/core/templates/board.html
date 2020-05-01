@@ -14,7 +14,7 @@
 
     <div class="container" style="text-align:center">
         <h1>Poker Game &emsp;</h1>
-        <h2>Player : </h2>
+        <h2>Player : {{playerName}}</h2>
         <br />
         <div class='container' style="border: 5px solid lightskyblue;">
             <br>
@@ -24,15 +24,34 @@
                 </div>
 
                 <div class='col' style='text-align:center'>
-                    <h2> bot's hand &emsp;</h2>
-                    <h3>
-                        {% for card in botHand %}
-                            {{card}} &emsp;
-                        {% endfor %}
-                    </h3>
+                    <div class='row'>
+                        <div class='col'>
+                            <h2> bot's hand &emsp;</h2>
+                            <h3>
+                                {{botHand}}
+                            </h3>
+                        </div>
+                        <div class='col'>
+                            <h2>bot stack</h2>
+                            <h3>{{botStack}}</h3>
+                        </div>
+                        
+                    </div>
+                    <br>
+
+                    <div class='row'>
+                        <div class='col' style='text-align:center'>
+                        </div>
+                        <div class='col' style='text-align:center'>
+                            <h2>bot bet : {{botBet}}</h2>
+                        </div>
+                        
+                    </div>
+                    
                 </div>
                 
             </div>
+            
             
             <br />
             <br />
@@ -44,9 +63,7 @@
                 <h3>
                     <table style="float:right;width:100%;margin: 20px 40px;">
                         <tr>
-                            {% for card in board %}
-                                <th>{{card}}</th>
-                            {% endfor %}
+                            {{board}} &emsp;
                         </tr>
                     </table>
                 </h3>
@@ -59,32 +76,48 @@
             <br />
             <br />
             <br />
-            <div class='row'>
-                <div class='col' style="text-align:center">
-                    <h2>your hand &emsp;</h2>
-                    <h3>
-                        {% for card in hand %}
-                            {{card}} &emsp;
-                        {% endfor %}
-                    </h3>
-                    
+            <div class='col'>
+                <div class='row'>
+                    <h2>your bet : {{playerBet}}</h2>
+                </div>
+                <br>
+                <div class='row'>
+                    <div class='col' style="text-align:center">
+                        <div class='row'>
+                            <div class='col'>
+                                <h2> your hand &emsp;</h2>
+                                <h3>
+                                    {{hand}}
+                                </h3>
+                            </div>
+                            <div class='col'>
+                                <h2>your stack</h2>
+                                <h2>{{stack}}</h2>
+                            </div>
+                            
+                        </div>
+                        
+                    </div>
+    
+                    <div class='col' style="color:dodgerblue;">
+                        <h4><a href='/check'>Check</a>
+                        &emsp;
+                        <a href='/fold'>Fold</a></h4>
+                        <h4 style="color:dodgerblue;">
+                            Bet</h4>
+                            <form method="POST" action="/bet">
+                                {% csrf_token %}
+                                <input name="amt" placeholder="bet amount" />
+                                <input type="submit" />
+                            </form>
+                        
+                        
+                    </div>
                 </div>
 
-                <div class='col' style="color:dodgerblue;">
-                    <h4><a href='/check'>Check</a>
-                    &emsp;
-                    <a href='/fold'>Fold</a></h4>
-                    <h4 style="color:dodgerblue;">
-                        Bet</h4>
-                        <form method="POST" action="/bet">
-                            {% csrf_token %}
-                            <input name="amt" placeholder="bet amount" />
-                            <input type="submit" />
-                        </form>
-                    
-                    
-                </div>
             </div>
+
+            
             <br>
 
         </div>

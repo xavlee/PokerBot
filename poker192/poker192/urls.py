@@ -16,15 +16,17 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from core.views import splash, board, check, bet, fold, accounts
-from core.views import load_game, new_game
+from core.views import load_game, new_game, new_hand
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', splash, name='splash'),
     path('board', board, name='board'),
     path('check', check, name='check'),
+    path('accounts', accounts, name='accounts'),
     path('bet', bet, name='bet'),
     path('fold', fold, name='fold'),
     path('loadgame', load_game, name='load_game'),
     path('newgame', new_game, name='new_game'),
+    path('newhand', new_hand, name='new_hand')
 ]
