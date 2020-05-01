@@ -6,7 +6,7 @@ import numpy as np
 import tensorflow as tf
 import keras 
 
-# string
+# int for street
 # list for hand
 # list for board
 
@@ -39,13 +39,13 @@ def predict(street, board, heroCards):
 
     element = None
     #make the element to predict
-    if street == 'preflop':
+    if street == 0:
         element = hero1v, hero1s, hero2v, hero2s
-    elif street == 'postflop': 
+    elif street == 1: 
         element = hero1v, hero1s, hero2v, hero2s, board1v, board1s, board2v, board2s, board3v, board3s
-    elif street == 'turn':
+    elif street == 2:
         element = hero1v, hero1s, hero2v, hero2s, board1v, board1s, board2v, board2s, board3v, board3s, board4v, board4s
-    elif street == 'river':
+    elif street == 3:
         element = hero1v, hero1s, hero2v, hero2s, board1v, board1s, board2v, board2s, board3v, board3s, board4v, board4s, board5v, board5s
     else:
         return None
@@ -57,13 +57,13 @@ def predict(street, board, heroCards):
 
     #load the model
     model_filename = None
-    if street == 'preflop':
+    if street == 0:
         model_filename = 'preflop_model'
-    elif street == 'postflop': 
+    elif street == 1: 
         model_filename = 'postflop_model'
-    elif street == 'turn':
+    elif street == 2:
         model_filename = 'turn_model'
-    elif street == 'river':
+    elif street == 3:
         model_filename = 'river_model'
     else:
         return None
