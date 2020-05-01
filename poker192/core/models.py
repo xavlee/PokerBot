@@ -85,6 +85,8 @@ class Game(models.Model):
     player = models.ForeignKey(User, null=True, on_delete=models.DO_NOTHING)
     numWins = models.BigIntegerField(default=0)
 
+    street = models.BigIntegerField(default=0)
+
     player_hand = models.OneToOneField('Hand', on_delete=models.DO_NOTHING, related_name="player")
     player_stack = models.BigIntegerField(default=0)
     player_bet = models.BigIntegerField(default=0)
