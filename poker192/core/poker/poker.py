@@ -10,15 +10,15 @@
 #quads - 8
 #straight flush - 9
 
-#************************** imports *********************************
+#************************** imports ******************************
+
 import random
 import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
 from sklearn import datasets
 
-#*************** Poker game *****************************************
-
+#******************* Poker game **********************************
 
 def printBoard(board):
     for card in board:
@@ -65,7 +65,7 @@ class Card:
     
 class Deck:
     def __init__(self):
-        self.cards = [Card(i, j) for i in range(2, 15) for j in range(1, 5)] 
+        self.cards = [Card(i, j) for i in range(2, 15) for j in range(1, 5)]
         random.shuffle(self.cards)
 
     def deal(self):
@@ -178,7 +178,7 @@ def hasPairs(cards):
 
         #check for quads
         if pairN == 4: 
-            return 8 + (pairV / 100) + (getHighCard(cards, pairV, 1) / 10000)  
+            return 8 + (pairV / 100) + (getHighCard(cards, pairV, 1) / 10000) 
 
         #check for trips
         if pairN == 3: 
