@@ -1,7 +1,6 @@
-import poker
-import model
-import datasets
-from datasets import getTuple
+from . import poker 
+from . import model 
+from .datasets import getTuple
 import numpy as np
 import tensorflow as tf
 import keras 

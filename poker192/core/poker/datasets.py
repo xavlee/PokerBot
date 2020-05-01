@@ -1,5 +1,4 @@
-import poker
-from poker import HeadsUpHand 
+from .poker import HeadsUpHand
 
 #*********** creating datasets **********************************
 #all functions create a list of hands

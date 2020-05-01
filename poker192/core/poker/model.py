@@ -1,10 +1,8 @@
 # poker stuff
-import poker
-from poker import HeadsUpHand
+from .poker import HeadsUpHand
 
 #datasets stuff
-import datasets
-from datasets import createHandData
+from .datasets import createHandData
 
 # data stuff 
 import matplotlib.pyplot as plt

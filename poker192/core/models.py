@@ -60,6 +60,45 @@ class Board(models.Model):
 
         return displayString[0:len(displayString) - 1]
 
+    def getFlop(self):
+        displayString = ""
+
+        i = 0
+
+        for card in self.cards.all():
+            if i == 3:
+                break
+
+            i += 1
+            displayString += str(card) + "\t"
+
+    def getTurn(self):
+        displayString = ""
+
+        i = 0
+
+        for card in self.cards.all():
+            if i == 4:
+                break
+            
+            i += 1
+            displayString += str(card) + "\t"
+
+
+        return displayString[0:len(displayString) - 1]
+
+    def getRiver(self):
+        displayString = ""
+
+        i = 0
+
+        for card in self.cards.all():
+            i += 1
+            displayString += str(card) + "\t"
+
+
+        return displayString[0:len(displayString) - 1]
+
 class Deck(models.Model):
     cards = models.ManyToManyField('Card')
 
@@ -95,6 +134,8 @@ class Game(models.Model):
 
     pot = models.BigIntegerField(default=0)
     created_at = models.DateTimeField(auto_now=True)
+
+    street = models.BigIntegerField(default=0)
 
     board = models.OneToOneField('Board', on_delete=models.DO_NOTHING, related_name="board")
 
