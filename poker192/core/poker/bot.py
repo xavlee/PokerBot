@@ -56,19 +56,19 @@ def predict(street, board, heroCards):
 
     #load the model
     model_filename = None
+
     if street == 0:
-        model_filename = 'preflop_model'
+        model_filename = './preflop_model'
     elif street == 1: 
-        model_filename = 'postflop_model'
+        model_filename = './postflop_model'
     elif street == 2:
-        model_filename = 'turn_model'
+        model_filename = './turn_model'
     elif street == 3:
-        model_filename = 'river_model'
+        model_filename = './river_model'
     else:
         return None
 
-    model = tf.keras.models.load_model(model_filename) 
-
+    model = tf.keras.models.load_model(model_filename)
 
     #predict
     result = model.predict_classes(list_wrapper)

@@ -24,7 +24,6 @@ def printBoard(board):
     for card in board:
         print(" " + str(card) + " ")
 
-
 class Card: 
     def __init__(self, val, st):
         self.value = val
