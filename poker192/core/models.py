@@ -18,7 +18,7 @@ class Card(models.Model):
         elif (self.value == 11):
             val = "J"
         elif (self.value == 10):
-            val = "T"
+            val = "10"
         elif (self.value == 12):
             val = "Q"
         elif (self.value == 13):
@@ -27,13 +27,13 @@ class Card(models.Model):
         #get suit
         st = ""
         if (self.suit == 1):
-            st = "s"
+            st = "(s)"
         elif (self.suit == 2):
-            st = "c"
+            st = "(c)"
         elif (self.suit == 3):
-            st = "h"
+            st = "(h)"
         elif (self.suit == 4):
-            st = "d"
+            st = "(d)"
 
         return val + st 
 

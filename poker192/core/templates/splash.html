@@ -13,11 +13,47 @@
   </head>
   <body>
     <div class="container" text-align="center">
-        <h1>Welcome to Poker 192</h1>
+        <h1 style="color:dodgerblue">Welcome to Poker 192</h1>
         <br>
-        <h2>
-            <a href='/accounts'>Start Game</a>
-        </h2>
+    </div>
+
+    <div class="container">
+      <h4>a heads-up poker simulator built by Xavier Lee and Jack Herrmann</h4>
+    </div>
+    <br>
+    <div class="container">
+        <h1>Load Game</h1>
+        <form method="POST" action="/loadgame">
+            {% csrf_token %}
+            <input name="username" placeholder="username" />
+            <br>
+            <br>
+            <input name="password" placeholder="password" type="password" />
+            <br>
+            <br>
+            <input type="submit" />
+        </form>
+        {{message}}
+        <br>
+        <br>
+
+        <h1>New Game</h1>
+        <form method="POST" action="/newgame">
+            {% csrf_token %}
+            <input name="username" placeholder="username" />
+            <br>
+            <br>
+            <input name="password" placeholder="password" type="password" />
+            <br>
+            <br>
+            <input name="email" placeholder="email" />
+            <br>
+            <br>
+            <input name="stack_amount" placeholder="stack amount"/>
+            <br>
+            <br>
+            <input type="submit" />
+        </form>
     </div>
     
 

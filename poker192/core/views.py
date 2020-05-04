@@ -16,10 +16,14 @@ def accounts(request):
 def board(request):
     game = Game.objects.get(player_name=request.user.username)
 
+    check_status = False
+    show_vil = False
+
     if game.player_bet == game.bot_bet:
         game.player_bet = 0
         game.bot_bet = 0
         game.save()
+        check_status = True
 
     hand = game.player_hand
     bot_hand = game.bot_hand
@@ -34,29 +38,24 @@ def board(request):
     message = ""
 
     streetName = ""
-
-    if street == 0:
-        streetName = "pre-flop"
-    elif street == 1:
-        streetName = "flop"
-    elif street == 2:
-        streetName = "turn"
-    elif street == 3:
-        streetName = "river"
-    elif street == 4:
-        streetName = "showdown"
-
     boardDisplay = ""
 
     if street == 0:
         boardDisplay = ""
+        streetName = "pre-flop"
     elif street == 1:
         boardDisplay = board.getFlop
+        streetName = "flop"
     elif street == 2:
         boardDisplay = board.getTurn
+        streetName = "turn"
     elif street == 3:
         boardDisplay = board.getRiver
+        streetName = "river"
     elif street == 4: #showdown
+
+        streetName = "showdown"
+        show_vil = True
 
         boardDisplay = board.getRiver
         bot_cards = game.bot_hand.cards.all()
@@ -96,7 +95,7 @@ def board(request):
             "pot" : pot, "playerName" : request.user.username, "stack" : stack, \
             "playerBet" : player_bet, "botBet" : bot_bet, "botStack" : bot_stack, \
             "street" : streetName, "streetNo" : street, "message" : message, \
-            "gameComplete" : game_status})
+            "gameComplete" : game_status, "canCheck" : check_status, "showVil" : show_vil})
 
 def load_game(request):
     if request.method == "POST":

@@ -400,9 +400,9 @@ def whoWins(playerCards, botCards, boardCards):
     botScore = handValue(botTuple, boardList)
 
     #return something
-    if playerScore > botScore:
+    if playerScore < botScore:
         return 1
-    elif botScore > playerScore:
+    elif botScore < playerScore:
         return -1
     else:
         return 0

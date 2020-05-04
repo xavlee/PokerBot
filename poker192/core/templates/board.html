@@ -13,8 +13,8 @@
   <body>
 
     <div class="container" style="text-align:center">
-        <h1>Poker Game &emsp;</h1>
-        <h2>Player : {{playerName}}</h2>
+        <h1>Texas Hold'em &emsp;</h1>
+        <h2>Player : {{playerName}} &emsp;</h2>
         <br />
         <div class='container' style="border: 5px solid lightskyblue;">
             <br>
@@ -26,13 +26,17 @@
                 <div class='col' style='text-align:center'>
                     <div class='row'>
                         <div class='col'>
-                            <h2> bot's hand &emsp;</h2>
-                            <h3>
-                                {{botHand}}
-                            </h3>
+
+                            {% if showVil == True %}
+                            <h2> Villain's hand &emsp;</h2>
+                                <h3>
+                                    {{botHand}}
+                                </h3>
+                            {% else %}
+                            {% endif %}
                         </div>
                         <div class='col'>
-                            <h2>bot stack</h2>
+                            <h2>Villain stack</h2>
                             <h3>{{botStack}}</h3>
                         </div>
                         
@@ -41,9 +45,10 @@
 
                     <div class='row'>
                         <div class='col' style='text-align:center'>
+                            <h2>Villain bet : {{botBet}}</h2>
                         </div>
                         <div class='col' style='text-align:center'>
-                            <h2>bot bet : {{botBet}}</h2>
+                            
                         </div>
                         
                     </div>
@@ -58,8 +63,7 @@
             <br />
             <br />
             <div class='container', style="text-align:center">
-                <h2 color=red>{{message}} &emsp;</h2>
-                <h2> the board &emsp; </h2>
+                <h2 style='color:red'>{{message}} &emsp;</h2>
                 <h2> street: {{street}} &emsp; </h2>
                 
                 <h3>pot: {{pot}} &emsp;</h3>
@@ -71,10 +75,10 @@
                     </table>
                 </h3>
                 {% if gameStatus == True%}
-                    <h3><a href='/newgame'>New Game</a></h3>
+                    <h3><a href='/newgame'>New Game</a>&emsp;/h3>
                 {% else %}
                 {% if streetNo == 4 %}
-                    <h3><a href='/newhand'>Next Hand!</a></h3>
+                    <h3><a href='/newhand'>Next Hand! &emsp;</a></h3>
                 {% else %}
                 {% endif %}
                 {% endif %}
@@ -90,7 +94,13 @@
             <br />
             <div class='col'>
                 <div class='row'>
-                    <h2>your bet : {{playerBet}}</h2>
+                    <div class='col'>
+                        <h2>your bet : {{playerBet}}</h2>
+                    </div>
+                    <div class='col'>
+                        
+                    </div>
+                    
                 </div>
                 <br>
                 <div class='row'>
@@ -112,11 +122,16 @@
                     </div>
     
                     <div class='col' style="color:dodgerblue;">
-                        <h4><a href='/check'>Check</a>
+
+                        {% if canCheck == True %}
+                            <h4><a href='/check'>Check</a>
+                        {% else %}
+                            <h4><a href='/call'>Call</a>
+                        {% endif %}
+
                         &emsp;
                         <a href='/fold'>Fold</a></h4>
                         &emsp;
-                        <h4><a href='/call'>Call</a>
                         <h4 style="color:dodgerblue;">
                             Bet</h4>
                             <form method="POST" action="/bet">
@@ -124,8 +139,6 @@
                                 <input name="amt" placeholder="bet amount" />
                                 <input type="submit" />
                             </form>
-                        
-                        
                     </div>
                 </div>
 
