@@ -270,10 +270,9 @@ def check(request):
 
                 game.save()
             elif predict_value == -1:
-                game.player_stack += game.pot
-                game.pot = 0
+                game.street += 1
+
                 game.save()
-                return redirect('/newhand')
             else:
                 print("error in predict value")
 
