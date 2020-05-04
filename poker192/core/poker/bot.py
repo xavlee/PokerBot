@@ -80,3 +80,4 @@ def predict(street, board, heroCards):
         return 1
     if result == 2:
         return -1
+

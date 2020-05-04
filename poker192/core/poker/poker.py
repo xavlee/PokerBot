@@ -370,3 +370,39 @@ class HeadsUpHand:
         print("vill cards: " + str(vil1) + " " + str(vil2))
         self.board.sort(key= getValue)
         printBoard(self.board)
+
+
+
+#playercards - 
+
+#1 if player wins
+#0 if chop
+#-1 if bot wins
+def whoWins(playerCards, botCards, boardCards):
+    #make cards for this file
+    player1 = Card(playerCards[0].value, playerCards[0].suit)
+    player2 = Card(playerCards[1].value, playerCards[1].suit)
+    bot1 = Card(botCards[0].value, botCards[0].suit)
+    bot2 = Card(botCards[1].value, botCards[1].suit)
+    board1 = Card(boardCards[0].value, boardCards[0].suit)
+    board2 = Card(boardCards[1].value, boardCards[1].suit)
+    board3 = Card(boardCards[2].value, boardCards[2].suit)
+    board4 = Card(boardCards[3].value, boardCards[3].suit)
+    board5 = Card(boardCards[4].value, boardCards[4].suit)
+    
+    #make arguments for score function
+    boardList = [board1, board2, board3, board4, board5]
+    playerTuple = player1, player2
+    botTuple = bot1, bot2
+
+    #get scores
+    playerScore = handValue(playerTuple, boardList)
+    botScore = handValue(botTuple, boardList)
+
+    #return something
+    if playerScore > botScore:
+        return 1
+    elif botScore > playerScore:
+        return -1
+    else:
+        return 0
