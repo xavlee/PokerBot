@@ -27,7 +27,7 @@
                     <div class='row'>
                         <div class='col'>
 
-                            {% if showVil == True %}
+                            {% if True %}
                             <h2> Villain's hand &emsp;</h2>
                                 <h3>
                                     {{botHand}}
@@ -64,7 +64,7 @@
             <br />
             <div class='container', style="text-align:center">
                 <h2 style='color:red'>{{message}} &emsp;</h2>
-                <h2> street: {{street}} &emsp; </h2>
+                <h2> {{street}} &emsp; </h2>
                 
                 <h3>pot: {{pot}} &emsp;</h3>
                 <h3>
@@ -74,11 +74,11 @@
                         </tr>
                     </table>
                 </h3>
-                {% if gameStatus == True%}
-                    <h3><a href='/newgame'>New Game</a>&emsp;/h3>
+                {% if gameComplete == True %}
+                    <h3><a href='/nextgame'>New Game</a>&emsp;</h3>
                 {% else %}
                 {% if streetNo == 4 %}
-                    <h3><a href='/newhand'>Next Hand! &emsp;</a></h3>
+                    <h3><a href='/newhand'>Next Hand! </a>&emsp;</h3>
                 {% else %}
                 {% endif %}
                 {% endif %}

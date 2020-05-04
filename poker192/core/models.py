@@ -139,6 +139,8 @@ class Game(models.Model):
 
     street = models.BigIntegerField(default=0)
 
+    blinds = models.BigIntegerField(default=0)
+
     board = models.OneToOneField('Board', on_delete=models.DO_NOTHING, related_name="board")
 
     def __str__(self):

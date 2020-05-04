@@ -10,9 +10,6 @@ import random
 def splash(request):
     return render(request, 'splash.html', {})
 
-def accounts(request):
-    return render(request, 'accounts.html')
-
 def board(request):
     game = Game.objects.get(player_name=request.user.username)
 
@@ -67,7 +64,7 @@ def board(request):
         if showdown_value == -1:
             game.bot_stack += pot
             game.pot = 0
-            message = "bot wins"
+            message = "villain wins"
 
             if game.player_stack == 0:
                 game_status = True
@@ -80,8 +77,8 @@ def board(request):
         else: #showdown value is 1, player wins
             game.player_stack += pot
             game.pot = 0
-            message = "player wins!"
-            if game.player_stack == 0:
+            message = "you win!"
+            if game.bot_stack == 0:
                 game_status = True
         
         game.save()
@@ -147,16 +144,39 @@ def new_hand(request):
     game.bot_hand = botHand
     game.pot = 0
     game.board = board
+    game.player_bet = min(game.blinds, game.player_stack)
+    game.bot_bet = min(game.blinds, game.bot_stack)
+    game.player_stack -= game.player_bet
+    game.bot_stack -= game.bot_bet
+
+    game.pot = game.player_bet + game.bot_bet
 
     game.save()
 
     return redirect('/board')
 
+def next_game(request):
+
+    game = Game.objects.get(player_name=request.user.username)
+
+    og_stack = (max(game.player_stack, game.bot_stack) + game.blinds) // 2 
+
+    game.player_stack = og_stack
+    game.bot_stack = og_stack
+    
+    game.street = 0
+
+    game.save()
+
+    return redirect('/newhand')
+
 def new_game(request):
+
     username = request.POST['username']
     password = request.POST['password']
     email = request.POST['email']
     stack = int(request.POST['stack_amount'])
+    blinds = int(stack // 75)
 
     user = User.objects.create_user(username=username, email=email, password=password)
     login(request, user)
@@ -194,15 +214,15 @@ def new_game(request):
         board.cards.add(bc)
 
     newGame = Game(player_name=request.user.username, player=request.user, player_stack=stack, \
-        bot_stack=stack, player_hand=playerHand, bot_hand=botHand, board=board, street=0)
+        bot_stack=stack, player_hand=playerHand, bot_hand=botHand, board=board, street=0, blinds=blinds)
     
     newGame.save()
 
-    return redirect('/board')
+    return redirect('/newhand')
 
 def logout(request):
     logout(request)
-    return redirect("/accounts")
+    return redirect("/splash")
 
 def call(request):
     game = Game.objects.get(player_name=request.user.username)
@@ -228,7 +248,10 @@ def call(request):
                 game.player_bet = game.bot_bet
                 game.pot += diff
 
-            game.street += 1
+            if game.player_stack == 0 or game.bot_stack == 0:
+                game.street = 4
+            else:
+                game.street += 1
 
             game.save()
 
@@ -237,6 +260,9 @@ def call(request):
 def check(request):
 
     game = Game.objects.get(player_name=request.user.username)
+
+    if game.bot_stack == 0 or game.player_stack == 0:
+        game.street = 4
 
     if game.street != 4:
         if game.player_bet >= game.bot_bet: 
@@ -253,7 +279,7 @@ def check(request):
                 bot_bet = 0
 
                 if game.pot == 0:
-                    bot_bet = bot_stack // 20
+                    bot_bet = max(bot_stack // 20, game.blinds * 2)
                     game.bot_stack -= bot_bet
                 else:
                     bot_bet = min(game.pot // 3, bot_stack)
@@ -329,6 +355,9 @@ def bet(request):
             
             game.bot_bet = bot_bet
             game.pot += bot_bet
+
+            if game.bot_stack == 0 or game.player_stack == 0:
+                game.street = 4
 
             game.save()
 
