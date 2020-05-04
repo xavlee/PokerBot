@@ -5,6 +5,8 @@ import numpy as np
 import tensorflow as tf
 import keras 
 
+import os
+
 # int for street
 # list for hand
 # list for board
@@ -57,14 +59,16 @@ def predict(street, board, heroCards):
     #load the model
     model = None
 
+    print(os.getcwd())
+
     if street == 0:
-        model = tf.keras.models.load_model('./saved_models/preflop_model')
+        model = tf.keras.models.load_model('./core/poker/saved_models/preflop_model')
     elif street == 1: 
-        model = tf.keras.models.load_model('./saved_models/postflop_model')
+        model = tf.keras.models.load_model('./core/poker/saved_models/postflop_model')
     elif street == 2:
-        model = tf.keras.models.load_model('./saved_models/turn_model')
+        model = tf.keras.models.load_model('./core/poker/saved_models/turn_model')
     elif street == 3:
-        model = tf.keras.models.load_model('./saved_models/river_model')
+        model = tf.keras.models.load_model('./core/poker/saved_models/river_model')
     else:
         return None
 

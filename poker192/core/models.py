@@ -72,6 +72,8 @@ class Board(models.Model):
             i += 1
             displayString += str(card) + "\t"
 
+        return displayString
+
     def getTurn(self):
         displayString = ""
 
@@ -107,7 +109,7 @@ class Deck(models.Model):
 
         for card in cardSet:
             self.cards.remove(card)
-            print("THIS IS CARDDDDD " + str(card.value) + " " + str(card.suit))
+            print("THIS IS CARD " + str(card.value) + " " + str(card.suit))
             return card
 
     def __str__(self):
@@ -140,4 +142,4 @@ class Game(models.Model):
     board = models.OneToOneField('Board', on_delete=models.DO_NOTHING, related_name="board")
 
     def __str__(self):
-        return self.player
+        return self.player_name
