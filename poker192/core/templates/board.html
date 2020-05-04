@@ -58,7 +58,7 @@
             <br />
             <br />
             <div class='container', style="text-align:center">
-                <h2>{{message}}</h2>
+                <h2 color=red>{{message}} &emsp;</h2>
                 <h2> the board &emsp; </h2>
                 <h2> street: {{street}} &emsp; </h2>
                 
@@ -71,10 +71,10 @@
                     </table>
                 </h3>
                 {% if gameStatus == True%}
-                    <a href='/newgame'>New Game</a>
+                    <h3><a href='/newgame'>New Game</a></h3>
                 {% else %}
                 {% if streetNo == 4 %}
-                    <a href='/newhand'>Next Hand!</a>>
+                    <h3><a href='/newhand'>Next Hand!</a></h3>
                 {% else %}
                 {% endif %}
                 {% endif %}

@@ -317,10 +317,13 @@ def bet(request):
             if bot_bet < game.player_bet:
                 back_to_player = game.player_bet - bot_bet
                 game.pot -= back_to_player
+                game.pot += bot_bet
                 game.player_bet -= back_to_player
                 game.player_stack += back_to_player
-                
-                game.street = 3
+                game.bot_stack -= bot_bet
+                game.bot_bet = bot_bet
+                game.street = 4
+                game.save()
 
                 return redirect('/board')
 
