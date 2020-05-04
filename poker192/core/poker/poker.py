@@ -17,6 +17,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
 from sklearn import datasets
+from math import floor
 
 #******************* Poker game **********************************
 
@@ -399,5 +400,66 @@ def whoWins(playerCards, botCards, boardCards):
     playerScore = handValue(playerTuple, boardList)
     botScore = handValue(botTuple, boardList)
 
+    playerRounded = floor(playerScore)
+    botRounded = floor(botScore)
+
+    playerString = "Nothing"
+    botString = "Nothing"
+
+#high card - 1
+#pair - 2
+#two pair - 3
+#trips - 4
+#straight - 5
+#flush - 6
+#boat - 7
+#quads - 8
+#straight flush - 9
+
+    if playerRounded == 1:
+        playerString = "High Card"
+    elif playerRounded == 2:
+        playerString = "Pair"
+    elif playerRounded == 3:
+        playerString = "Two Pair"
+    elif playerRounded == 4:
+        playerString = "Trips"
+    elif playerRounded == 5:
+        playerString = "Straight"
+    elif playerRounded == 6:
+        playerString = "Flush"
+    elif playerRounded == 7:
+        playerString = "Full House"
+    elif playerRounded == 8:
+        playerString = "Quads"
+    elif playerRounded >= 9:
+        playerString = "Straight Flush" 
+
+    if botRounded == 1:
+        botString = "High Card"
+    elif botRounded == 2:
+        botString = "Pair"
+    elif botRounded == 3:
+        botString = "Two Pair"
+    elif botRounded == 4:
+        botString = "Trips"
+    elif botRounded == 5:
+        botString = "Straight"
+    elif botRounded == 6:
+        botString = "Flush"
+    elif botRounded == 7:
+        botString = "Full House"
+    elif botRounded == 8:
+        botString = "Quads"
+    elif botRounded >= 9:
+        botString = "Straight Flush"
+
+    winner = 0
+
+    if playerScore > botScore:
+        winner = 1
+    elif botScore > playerScore:
+        winner = -1
+
     #return something
-    return playerScore, botScore
+    return winner, playerString, botString
