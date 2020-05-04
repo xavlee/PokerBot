@@ -27,11 +27,12 @@
                     <div class='row'>
                         <div class='col'>
 
-                            {% if True %}
+                            {% if showVil == True %}
                             <h2> Villain's hand &emsp;</h2>
                                 <h3>
                                     {{botHand}}
                                 </h3>
+                                <h4>{{botHandType}}</h4>
                             {% else %}
                             {% endif %}
                         </div>
@@ -77,10 +78,6 @@
                 {% if gameComplete == True %}
                     <h3><a href='/nextgame'>New Game</a>&emsp;</h3>
                 {% else %}
-                {% if streetNo == 4 %}
-                    <h3><a href='/newhand'>Next Hand! </a>&emsp;</h3>
-                {% else %}
-                {% endif %}
                 {% endif %}
                 
                 
@@ -111,6 +108,7 @@
                                 <h3>
                                     {{hand}}
                                 </h3>
+                                <h4>{{playerHandType</h4>
                             </div>
                             <div class='col'>
                                 <h2>your stack</h2>
@@ -123,12 +121,16 @@
     
                     <div class='col' style="color:dodgerblue;">
 
-                        {% if canCheck == True %}
-                            <h4><a href='/check'>Check</a>
+                        {% if streetNo == 4 %}
+                            <h4><a href='/newhand'>Next Hand! </a></h4>
                         {% else %}
-                            <h4><a href='/call'>Call</a>
+                            {% if canCheck == True %}
+                                <h4><a href='/check'>Check</a>
+                            {% else %}
+                                <h4><a href='/call'>Call</a>
+                            {% endif %}
                         {% endif %}
-
+                         
                         &emsp;
                         <a href='/fold'>Fold</a></h4>
                         &emsp;

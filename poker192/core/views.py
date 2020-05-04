@@ -15,6 +15,8 @@ def board(request):
 
     check_status = False
     show_vil = False
+    bot_hand_type = ""
+    player_hand_type = ""
 
     if game.player_bet == game.bot_bet:
         game.player_bet = 0
@@ -59,7 +61,10 @@ def board(request):
         player_cards = game.player_hand.cards.all()
         board_cards = game.board.cards.all()
 
-        showdown_value = poker.whoWins(bot_cards, player_cards, board_cards)
+        showdown_value, pht, bht = poker.whoWins(bot_cards, player_cards, board_cards)
+
+        bot_hand_type = bht
+        player_hand_type = pht
 
         if showdown_value == -1:
             game.bot_stack += pot
@@ -92,7 +97,8 @@ def board(request):
             "pot" : pot, "playerName" : request.user.username, "stack" : stack, \
             "playerBet" : player_bet, "botBet" : bot_bet, "botStack" : bot_stack, \
             "street" : streetName, "streetNo" : street, "message" : message, \
-            "gameComplete" : game_status, "canCheck" : check_status, "showVil" : show_vil})
+            "gameComplete" : game_status, "canCheck" : check_status, "showVil" : show_vil, \
+            "botHandType" : bot_hand_type, "playerHandType" : player_hand_type})
 
 def load_game(request):
     if request.method == "POST":
