@@ -379,7 +379,7 @@ class HeadsUpHand:
 #1 if player wins
 #0 if chop
 #-1 if bot wins
-def whoWins(playerCards, botCards, boardCards):
+def whoWins(botCards, playerCards, boardCards):
     #make cards for this file
     player1 = Card(playerCards[0].value, playerCards[0].suit)
     player2 = Card(playerCards[1].value, playerCards[1].suit)
