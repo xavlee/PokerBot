@@ -63,8 +63,8 @@ def board(request):
 
         showdown_value, pht, bht = poker.whoWins(bot_cards, player_cards, board_cards)
 
-        bot_hand_type = bht
         player_hand_type = pht
+        bot_hand_type = bht
 
         if showdown_value == -1:
             game.bot_stack += pot
