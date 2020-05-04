@@ -16,9 +16,10 @@ def accounts(request):
 def board(request):
     game = Game.objects.get(player_name=request.user.username)
 
-    game.player_bet = 0
-    game.bot_bet = 0
-    game.save()
+    if game.player_bet == game.bot_bet:
+        game.player_bet = 0
+        game.bot_bet = 0
+        game.save()
 
     hand = game.player_hand
     bot_hand = game.bot_hand
@@ -29,6 +30,8 @@ def board(request):
     player_bet = game.player_bet
     bot_bet = game.bot_bet
     street = game.street
+    game_status = False
+    message = ""
 
     streetName = ""
 
@@ -54,6 +57,8 @@ def board(request):
     elif street == 3:
         boardDisplay = board.getRiver
     elif street == 4: #showdown
+
+        boardDisplay = board.getRiver
         bot_cards = game.bot_hand.cards.all()
         player_cards = game.player_hand.cards.all()
         board_cards = game.board.cards.all()
@@ -63,16 +68,22 @@ def board(request):
         if showdown_value == -1:
             game.bot_stack += pot
             game.pot = 0
-            game.street = 0
+            message = "bot wins"
+
+            if game.player_stack == 0:
+                game_status = True
         elif showdown_value == 0:
             half_pot = game.pot // 2
             game.pot = 0
             game.player_stack += half_pot
             game.bot_stack += half_pot
+            message = "chop"
         else: #showdown value is 1, player wins
             game.player_stack += pot
             game.pot = 0
-            game.street = 0
+            message = "player wins!"
+            if game.player_stack == 0:
+                game_status = True
         
         game.save()
         
@@ -84,7 +95,8 @@ def board(request):
         {"hand" : str(hand), "botHand" : str(bot_hand), "board" : boardDisplay, \
             "pot" : pot, "playerName" : request.user.username, "stack" : stack, \
             "playerBet" : player_bet, "botBet" : bot_bet, "botStack" : bot_stack, \
-                "street" : streetName})
+            "street" : streetName, "streetNo" : street, "message" : message, \
+            "gameComplete" : game_status})
 
 def load_game(request):
     if request.method == "POST":
@@ -99,7 +111,7 @@ def load_game(request):
 
 def new_hand(request):
     game = Game.objects.get(player_name=request.user.username)
-
+    game.street = 0
     newDeck = Deck()
     newDeck.save()
 
@@ -183,7 +195,7 @@ def new_game(request):
         board.cards.add(bc)
 
     newGame = Game(player_name=request.user.username, player=request.user, player_stack=stack, \
-        bot_stack=stack, player_hand=playerHand, bot_hand=botHand, board=board)
+        bot_stack=stack, player_hand=playerHand, bot_hand=botHand, board=board, street=0)
     
     newGame.save()
 
@@ -196,29 +208,30 @@ def logout(request):
 def call(request):
     game = Game.objects.get(player_name=request.user.username)
 
-    if game.player_bet < game.bot_bet:
-        bot_bet = game.bot_bet
+    if game.street != 4:
+        if game.player_bet < game.bot_bet:
+            bot_bet = game.bot_bet
 
-        player_stack = game.player_stack
+            player_stack = game.player_stack
 
-        diff = bot_bet - game.player_bet
+            diff = bot_bet - game.player_bet
 
-        if player_stack < diff:
-            back_to_bot = diff - player_stack
-            game.bot_stack += back_to_bot
-            game.pot -= back_to_bot
-            game.bot_bet = player_stack
-            game.player_bet = player_stack
-            game.player_stack = 0
-            game.pot += player_stack
-        else:
-            game.player_stack -= diff
-            game.player_bet = game.bot_bet
-            game.pot += diff
+            if player_stack < diff:
+                back_to_bot = diff - player_stack
+                game.bot_stack += back_to_bot
+                game.pot -= back_to_bot
+                game.bot_bet = player_stack
+                game.player_bet = player_stack
+                game.player_stack = 0
+                game.pot += player_stack
+            else:
+                game.player_stack -= diff
+                game.player_bet = game.bot_bet
+                game.pot += diff
 
-        game.street += 1
+            game.street += 1
 
-        game.save()
+            game.save()
 
     return redirect('/board')
 
@@ -226,7 +239,67 @@ def check(request):
 
     game = Game.objects.get(player_name=request.user.username)
 
-    if game.player_bet >= game.bot_bet: 
+    if game.street != 4:
+        if game.player_bet >= game.bot_bet: 
+            bot_cards = game.bot_hand.cards.all()
+
+            board_cards = game.board.cards.all()
+
+            street = game.street
+
+            predict_value = bot.predict(street, board_cards, bot_cards)
+
+            if predict_value == 1:
+                bot_stack = game.bot_stack
+                bot_bet = 0
+
+                if game.pot == 0:
+                    bot_bet = bot_stack // 20
+                    game.bot_stack -= bot_bet
+                else:
+                    bot_bet = min(game.pot // 3, bot_stack)
+                    game.bot_stack -= bot_bet
+                
+                game.bot_bet = bot_bet
+                game.pot += bot_bet
+
+                game.save()
+
+            elif predict_value == 0:
+                game.street += 1
+
+                game.save()
+            elif predict_value == -1:
+                game.player_stack += game.pot
+                game.pot = 0
+                game.save()
+                return redirect('/newhand')
+            else:
+                print("error in predict value")
+
+    return redirect('/board')
+
+def bet(request):
+    betAmt = int(request.POST['amt'])
+
+    game = Game.objects.get(player_name=request.user.username)
+
+    if game.street != 4:
+        player_stack = game.player_stack
+
+        if betAmt > player_stack:
+            game.player_bet = betAmt
+            game.player_stack = 0
+            game.street = 4
+
+            return redirect('/board')
+        else:
+            game.player_stack = player_stack - betAmt
+        
+        game.pot += betAmt
+
+        game.player_bet = betAmt
+
         bot_cards = game.bot_hand.cards.all()
 
         board_cards = game.board.cards.all()
@@ -239,131 +312,76 @@ def check(request):
             bot_stack = game.bot_stack
             bot_bet = 0
 
-            if game.pot == 0:
-                bot_bet = bot_stack // 20
-                game.bot_stack -= bot_bet
-            else:
-                bot_bet = min(game.bot // 3, bot_stack)
-                game.bot_stack -= bot_bet
+            bot_bet = min(game.player_bet * 3 // 2, bot_stack)
+
+            if bot_bet < game.player_bet:
+                back_to_player = game.player_bet - bot_bet
+                game.pot -= back_to_player
+                game.player_bet -= back_to_player
+                game.player_stack += back_to_player
+                
+                game.street = 3
+
+                return redirect('/board')
+
+            game.bot_stack -= bot_bet
             
             game.bot_bet = bot_bet
             game.pot += bot_bet
 
             game.save()
 
+            return redirect('/board')
+
         elif predict_value == 0:
+            diff = game.player_bet - game.bot_bet
+
+            bot_bet = min(game.bot_stack, diff)
+
+            if bot_bet < game.player_bet:
+                back_to_player = game.player_bet - bot_bet
+                game.pot -= back_to_player
+                game.player_bet -= back_to_player
+                game.player_stack += back_to_player
+                game.street = 4
+                return redirect('/board')
+
+            game.bot_bet += bot_bet
+            game.pot += bot_bet
+            game.bot_stack -= bot_bet
+
             game.street += 1
 
             game.save()
+
+            return redirect('/board')
         elif predict_value == -1:
             game.player_stack += game.pot
             game.pot = 0
+            game.player_bet = 0
+            game.bot_bet = 0
             game.save()
             return redirect('/newhand')
         else:
             print("error in predict value")
 
-    return redirect('/board')
-
-def bet(request):
-    betAmt = int(request.POST['amt'])
-
-    game = Game.objects.get(player_name=request.user.username)
-
-    player_stack = game.player_stack
-
-    if betAmt > player_stack:
-        if betAmt < game.bot_bet:
-            return redirect('/board')
-
-        betAmt = player_stack
-        game.player_stack = 0
-    else:
-        game.player_stack = player_stack - betAmt
-    
-    game.pot += betAmt
-
-    game.player_bet = betAmt
-
-    bot_cards = game.bot_hand.cards.all()
-
-    board_cards = game.board.cards.all()
-
-    street = game.street
-
-    predict_value = bot.predict(street, board_cards, bot_cards)
-
-    if predict_value == 1:
-        bot_stack = game.bot_stack
-        bot_bet = 0
-
-        bot_bet = min(game.player_bet * 3 // 2, bot_stack)
-
-        if bot_bet < game.player_bet:
-            back_to_player = game.player_bet - bot_bet
-            game.pot -= back_to_player
-            game.player_bet -= back_to_player
-            game.player_stack += back_to_player
-            
-            game.street = 3
-
-            return redirect('/board')
-
-        game.bot_stack -= bot_bet
-        
-        game.bot_bet = bot_bet
-        game.pot += bot_bet
-
         game.save()
-
-        return redirect('/board')
-
-    elif predict_value == 0:
-        diff = game.player_bet - game.bot_bet
-
-        bot_bet = min(game.bot_stack, diff)
-
-        if bot_bet < game.player_bet:
-            back_to_player = game.player_bet - bot_bet
-            game.pot -= back_to_player
-            game.player_bet -= back_to_player
-            game.player_stack += back_to_player
-            game.street = 3
-            return redirect('/board')
-
-        game.bot_bet += bot_bet
-        game.pot += bot_bet
-        game.bot_stack -= bot_bet
-
-        game.street += 1
-
-        game.save()
-
-        return redirect('/board')
-    elif predict_value == -1:
-        game.player_stack += game.pot
-        game.pot = 0
-        game.player_bet = 0
-        game.bot_bet = 0
-        game.save()
-        return redirect('/newhand')
-    else:
-        print("error in predict value")
-
-    game.save()
 
     return redirect('/board')
 
 def fold(request):
     game = Game.objects.get(player_name=request.user.username)
+    if game.street != 4:
+        game.bot_stack += game.pot
+        game.pot = 0
+        game.bot_bet = 0
+        game.player_bet = 0
+        game.street = 0
 
-    game.bot_stack += game.pot
-    game.pot = 0
-    game.bot_bet = 0
-    game.player_bet = 0
-    game.street = 0
+        game.save()
 
-    game.save()
-
-    return redirect('/newhand')
+        return redirect('/newhand')
+    else:
+        return redirect('/board')
+    
 

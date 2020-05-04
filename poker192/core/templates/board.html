@@ -58,6 +58,7 @@
             <br />
             <br />
             <div class='container', style="text-align:center">
+                <h2>{{message}}</h2>
                 <h2> the board &emsp; </h2>
                 <h2> street: {{street}} &emsp; </h2>
                 
@@ -69,6 +70,15 @@
                         </tr>
                     </table>
                 </h3>
+                {% if gameStatus == True%}
+                    <a href='/newgame'>New Game</a>
+                {% else %}
+                {% if streetNo == 4 %}
+                    <a href='/newhand'>Next Hand!</a>>
+                {% else %}
+                {% endif %}
+                {% endif %}
+                
                 
     
             </div>

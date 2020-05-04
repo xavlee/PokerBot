@@ -83,9 +83,4 @@ def predict(street, board, heroCards):
     if result == 1:
         return 1
     if result == 2:
-<<<<<<< HEAD
         return -1
-=======
-        return -1
-
->>>>>>> 339164589f112d3af87a76d40731650d1a683d63
