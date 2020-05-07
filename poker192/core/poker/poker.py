@@ -175,6 +175,7 @@ def hasPairs(cards):
         return tot + (highCard / 1000000)
 
     if len(pairs) == 1:
+        
         pairN, pairV = pairs[0].num, pairs[0].val 
 
         #check for quads
@@ -183,7 +184,7 @@ def hasPairs(cards):
 
         #check for trips
         if pairN == 3: 
-            return 3 + (pairV / 100) + (getHighCard(cards, pairV, 2) / 10000)
+            return 4 + (pairV / 100) + (getHighCard(cards, pairV, 2) / 10000)
 
         #return value of pair
         return 2 + (pairV / 100) + (getHighCard(cards, pairV, 3) / 10000) 
