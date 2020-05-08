@@ -11,6 +11,8 @@ In this file, tensorflow models were created and saved. There were four differen
 The bot is simply one function that takes in the bots hole cards, any cards that are dealt to the board, and what street the game is on. The function then loads the relevant tensorflow model, predicts the outcome of the hand with the model, and returns the prediction. This is the basis for the bot's play in the game.  
 
 ## The Interface
+Xavier write stuff here
+
 
 
 
