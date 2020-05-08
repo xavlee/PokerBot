@@ -48,7 +48,7 @@ class Hand(models.Model):
 
         return displayString[0: len(displayString) - 1]
 
-class Board(models.Model):
+class Board(models.Model): #maintains the state of the board
     player = models.CharField(max_length=100, default="player_name")
     cards = models.ManyToManyField('Card')
 
@@ -120,7 +120,7 @@ class Deck(models.Model):
 
         return displayString[0: len(displayString) - 1]
 
-class Game(models.Model):
+class Game(models.Model): #game model that keeps track of all variables
     
     player_name = models.CharField(max_length=100, default="player_name")
     player = models.ForeignKey(User, null=True, on_delete=models.DO_NOTHING)

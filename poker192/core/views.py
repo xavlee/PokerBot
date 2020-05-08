@@ -10,11 +10,11 @@ import random
 def splash(request):
     return render(request, 'splash.html', {})
 
-def board(request):
+def board(request): #render the board
     game = Game.objects.get(player_name=request.user.username)
 
-    check_status = False
-    show_vil = False
+    check_status = False #is check allowed (is there a raise)
+    show_vil = False #do we reveal the villain cards
     bot_hand_type = ""
     player_hand_type = ""
 
@@ -39,7 +39,7 @@ def board(request):
     streetName = ""
     boardDisplay = ""
 
-    if street == 0:
+    if street == 0: #determine board
         boardDisplay = ""
         streetName = "pre-flop"
     elif street == 1:
@@ -60,7 +60,8 @@ def board(request):
         bot_cards = game.bot_hand.cards.all()
         player_cards = game.player_hand.cards.all()
         board_cards = game.board.cards.all()
-
+        
+        #check who wins, 1-player, 0-chop, -1-villain
         showdown_value, pht, bht = poker.whoWins(bot_cards, player_cards, board_cards)
 
         player_hand_type = pht
@@ -91,7 +92,6 @@ def board(request):
     else:
         boardDisplay = "error in board street"
 
-    
     return render(request, 'board.html', 
         {"hand" : str(hand), "botHand" : str(bot_hand), "board" : boardDisplay, \
             "pot" : pot, "playerName" : request.user.username, "stack" : stack, \
@@ -117,6 +117,7 @@ def new_hand(request):
     newDeck = Deck()
     newDeck.save()
 
+    #shuffle the deck and put it into the db
     cardTuples = [(i, j) for i in range(2, 15) for j in range(1, 5)] 
     random.shuffle(cardTuples)
 
@@ -128,6 +129,7 @@ def new_hand(request):
     x1, x2 = newDeck.deal(), newDeck.deal()
     y1, y2 = newDeck.deal(), newDeck.deal()
 
+    #deal players new cards
     playerHand = Hand()
     playerHand.save()
     playerHand.cards.add(x1)
@@ -141,6 +143,7 @@ def new_hand(request):
     board = Board(player=request.user)
     board.save()
 
+    #deal 5 cards for the board
     boardCards = [newDeck.deal() for i in range(5)]
 
     for bc in boardCards:
@@ -167,6 +170,7 @@ def next_game(request):
 
     og_stack = (max(game.player_stack, game.bot_stack) + game.blinds) // 2 
 
+    #reset stacks
     game.player_stack = og_stack
     game.bot_stack = og_stack
     
@@ -190,6 +194,7 @@ def new_game(request):
     newDeck = Deck()
     newDeck.save()
 
+    #new deck
     cardTuples = [(i, j) for i in range(2, 15) for j in range(1, 5)] 
     random.shuffle(cardTuples)
 
@@ -201,6 +206,7 @@ def new_game(request):
     x1, x2 = newDeck.deal(), newDeck.deal()
     y1, y2 = newDeck.deal(), newDeck.deal()
 
+    #deal players new hand
     playerHand = Hand()
     playerHand.save()
     playerHand.cards.add(x1)
@@ -224,6 +230,7 @@ def new_game(request):
     
     newGame.save()
 
+    #start a new hand
     return redirect('/newhand')
 
 def logout(request):
@@ -233,7 +240,7 @@ def logout(request):
 def call(request):
     game = Game.objects.get(player_name=request.user.username)
 
-    if game.street != 4:
+    if game.street != 4: #check not on showdown
         if game.player_bet < game.bot_bet:
             bot_bet = game.bot_bet
 
@@ -241,7 +248,7 @@ def call(request):
 
             diff = bot_bet - game.player_bet
 
-            if player_stack < diff:
+            if player_stack < diff: #player all in
                 back_to_bot = diff - player_stack
                 game.bot_stack += back_to_bot
                 game.pot -= back_to_bot
@@ -249,14 +256,15 @@ def call(request):
                 game.player_bet = player_stack
                 game.player_stack = 0
                 game.pot += player_stack
-            else:
+            else: #normal bet
                 game.player_stack -= diff
                 game.player_bet = game.bot_bet
                 game.pot += diff
 
+            #either player all in -> goes to showdown
             if game.player_stack == 0 or game.bot_stack == 0:
                 game.street = 4
-            else:
+            else: #advance street if call
                 game.street += 1
 
             game.save()
@@ -267,10 +275,11 @@ def check(request):
 
     game = Game.objects.get(player_name=request.user.username)
 
+    #check if either player is all in
     if game.bot_stack == 0 or game.player_stack == 0:
         game.street = 4
 
-    if game.street != 4:
+    if game.street != 4: #check not in showdown yet
         if game.player_bet >= game.bot_bet: 
             bot_cards = game.bot_hand.cards.all()
 
@@ -278,9 +287,10 @@ def check(request):
 
             street = game.street
 
+            #get bot's predict value
             predict_value = bot.predict(street, board_cards, bot_cards)
 
-            if predict_value == 1:
+            if predict_value == 1: #bot bets
                 bot_stack = game.bot_stack
                 bot_bet = 0
 
@@ -296,11 +306,11 @@ def check(request):
 
                 game.save()
 
-            elif predict_value == 0:
+            elif predict_value == 0: #bot calls
                 game.street += 1
 
                 game.save()
-            elif predict_value == -1:
+            elif predict_value == -1: #bot calls
                 game.street += 1
 
                 game.save()
@@ -317,6 +327,7 @@ def bet(request):
     if game.street != 4:
         player_stack = game.player_stack
 
+        #player can only bet up to the amt of stack
         if betAmt > player_stack:
             game.player_bet = betAmt
             game.player_stack = 0
@@ -336,12 +347,14 @@ def bet(request):
 
         street = game.street
 
+        #get bot's predict value
         predict_value = bot.predict(street, board_cards, bot_cards)
 
         if predict_value == 1:
             bot_stack = game.bot_stack
             bot_bet = 0
 
+            #bot reraises
             bot_bet = min(game.player_bet * 3 // 2, bot_stack)
 
             if bot_bet < game.player_bet:
@@ -370,6 +383,7 @@ def bet(request):
             return redirect('/board')
 
         elif predict_value == 0:
+            #bot flat-calls if predict value is 0
             diff = game.player_bet - game.bot_bet
 
             bot_bet = min(game.bot_stack, diff)
@@ -392,6 +406,7 @@ def bet(request):
 
             return redirect('/board')
         elif predict_value == -1:
+            #bot folds
             game.player_stack += game.pot
             game.pot = 0
             game.player_bet = 0
@@ -407,7 +422,8 @@ def bet(request):
 
 def fold(request):
     game = Game.objects.get(player_name=request.user.username)
-    if game.street != 4:
+    if game.street != 4: 
+        #reset game parameters
         game.bot_stack += game.pot
         game.pot = 0
         game.bot_bet = 0
