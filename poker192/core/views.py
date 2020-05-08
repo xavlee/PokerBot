@@ -168,6 +168,9 @@ def next_game(request):
 
     game = Game.objects.get(player_name=request.user.username)
 
+    if game.bot_stack == 0 or game.player_stack == 0:
+        return redirect('/board')
+
     og_stack = (max(game.player_stack, game.bot_stack) + game.blinds) // 2 
 
     #reset stacks
