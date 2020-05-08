@@ -33,6 +33,7 @@ def board(request): #render the board
     player_bet = game.player_bet
     bot_bet = game.bot_bet
     street = game.street
+    hand_number = len(game)
     game_status = False
     message = ""
 
@@ -98,7 +99,8 @@ def board(request): #render the board
             "playerBet" : player_bet, "botBet" : bot_bet, "botStack" : bot_stack, \
             "street" : streetName, "streetNo" : street, "message" : message, \
             "gameComplete" : game_status, "canCheck" : check_status, "showVil" : show_vil, \
-            "botHandType" : bot_hand_type, "playerHandType" : player_hand_type})
+            "botHandType" : bot_hand_type, "playerHandType" : player_hand_type, \
+            "handNo" : hand_number})
 
 def load_game(request):
     if request.method == "POST":
@@ -114,6 +116,7 @@ def load_game(request):
 def new_hand(request):
     game = Game.objects.get(player_name=request.user.username)
     game.street = 0
+    game.hand_number += 1
     newDeck = Deck()
     newDeck.save()
 
@@ -178,6 +181,7 @@ def next_game(request):
     game.bot_stack = og_stack
     
     game.street = 0
+    game.hand_number = 0
 
     game.save()
 

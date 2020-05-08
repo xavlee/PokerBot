@@ -147,6 +147,11 @@ class Game(models.Model): #game model that keeps track of all variables
 
     board = models.OneToOneField('Board', on_delete=models.DO_NOTHING, \
         related_name="board")
+    
+    hand_number = models.BigIntegerField(default=0)
 
     def __str__(self):
         return self.player_name
+
+    def __len__(self):
+        return self.handNo
