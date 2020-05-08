@@ -109,7 +109,6 @@ class Deck(models.Model):
 
         for card in cardSet:
             self.cards.remove(card)
-            print("THIS IS CARD " + str(card.value) + " " + str(card.suit))
             return card
 
     def __str__(self):
