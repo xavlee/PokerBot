@@ -126,11 +126,15 @@ class Game(models.Model): #game model that keeps track of all variables
     player = models.ForeignKey(User, null=True, on_delete=models.DO_NOTHING)
     numWins = models.BigIntegerField(default=0)
 
-    player_hand = models.OneToOneField('Hand', on_delete=models.DO_NOTHING, related_name="player")
+    #player's fields
+    player_hand = models.OneToOneField('Hand', on_delete=models.DO_NOTHING, \
+        related_name="player")
     player_stack = models.BigIntegerField(default=0)
     player_bet = models.BigIntegerField(default=0)
 
-    bot_hand = models.OneToOneField('Hand', on_delete=models.DO_NOTHING, related_name="bot")
+    #bot's fields
+    bot_hand = models.OneToOneField('Hand', on_delete=models.DO_NOTHING, \
+        related_name="bot")
     bot_stack = models.BigIntegerField(default=0)
     bot_bet = models.BigIntegerField(default=0)
 
@@ -141,7 +145,8 @@ class Game(models.Model): #game model that keeps track of all variables
 
     blinds = models.BigIntegerField(default=0)
 
-    board = models.OneToOneField('Board', on_delete=models.DO_NOTHING, related_name="board")
+    board = models.OneToOneField('Board', on_delete=models.DO_NOTHING, \
+        related_name="board")
 
     def __str__(self):
         return self.player_name

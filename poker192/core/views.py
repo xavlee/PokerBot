@@ -225,8 +225,9 @@ def new_game(request):
     for bc in boardCards:
         board.cards.add(bc)
 
-    newGame = Game(player_name=request.user.username, player=request.user, player_stack=stack, \
-        bot_stack=stack, player_hand=playerHand, bot_hand=botHand, board=board, street=0, blinds=blinds)
+    newGame = Game(player_name=request.user.username, player=request.user,\
+        player_stack=stack, bot_stack=stack, player_hand=playerHand, \
+            bot_hand=botHand, board=board, street=0, blinds=blinds)
     
     newGame.save()
 

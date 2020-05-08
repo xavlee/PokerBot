@@ -5,7 +5,6 @@ import numpy as np
 import tensorflow as tf
 import keras 
 import random
-
 import os
 
 # int for street
