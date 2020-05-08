@@ -115,6 +115,10 @@ def load_game(request):
 
 def new_hand(request):
     game = Game.objects.get(player_name=request.user.username)
+
+    if game.bot_stack == 0 or game.player_stack == 0:
+        return redirect('/board')
+
     game.street = 0
     game.hand_number += 1
     newDeck = Deck()
