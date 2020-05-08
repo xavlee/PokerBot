@@ -22,7 +22,7 @@ models.py contains all of the different classes that we made for poker: Card, Ha
 Deck, and Game. Hand, Deck, and Board have a one-to-many relationship with Card, and the 
 Game model has a one-to-one relationship with Hand, Board, and Deck. The Game model 
 essentially maintains the state of the game, keeping track of player and bot hand, stacks,
-and bets. Furthermore, each class has its own necessary magic functions needed to execute
+and bets. Furthermore, each class has its own necessary methods needed to execute
 certain parts of the UI, such as the board having functions to pull different streets
 of the game, and each model having its own string function. 
 

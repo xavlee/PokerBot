@@ -154,4 +154,4 @@ class Game(models.Model): #game model that keeps track of all variables
         return self.player_name
 
     def __len__(self):
-        return self.handNo
+        return self.hand_number
