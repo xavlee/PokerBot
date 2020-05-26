@@ -1,5 +1,5 @@
 # Pokerbot
-For our final project, we implemented a Tensorflow-driven pokerbot. 
+We implemented a Tensorflow-driven pokerbot. 
 ## Game and Model: poker192/core/poker
 ### The Game: poker.py
 The first step of the process was to implement poker. For simplicity, and to give the bot the best chance to win, we decided to make the game heads up (one on one). We built simple functions to simulate a game, including a card class, a deck class, and the main challenge in this section: a function to determine who won a particular hand.  
