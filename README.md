@@ -1,4 +1,4 @@
-# CIS 192 Final: Pokerbot
+# Pokerbot
 For our final project, we implemented a Tensorflow-driven pokerbot. 
 ## Game and Model: poker192/core/poker
 ### The Game: poker.py
